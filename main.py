@@ -2,26 +2,39 @@
 # -*- coding: utf-8 -*-
 
 import requests
+import pandas as pd
 
-def get_pokemons(url='http://pokeapi.co/api/v2/pokemon-form', offset=0):
-    args = {'offset' : offset} if offset else {}
-
-    response = requests.get(url, params=args)
-
+def get_pokemon_data(pokemon_id):
+    url = f"https://pokeapi.co/api/v2/pokemon/{pokemon_id}"
+    response = requests.get(url)
     if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Error al obtener los datos del Pokémon {pokemon_id}")
+        return None
 
-        payload = response.json()
-        results = payload.get('results', [])
+def create_pokemon_dataframe(pokemon_ids):
+    data = []
+    for pokemon_id in pokemon_ids:
+        pokemon_data = get_pokemon_data(pokemon_id)
+        if pokemon_data:
+            data.append({
+                "Nombre": pokemon_data["name"],
+                "Altura": pokemon_data["height"],
+                "Peso": pokemon_data["weight"],
+                "Tipo(s)": ", ".join([t["type"]["name"] for t in pokemon_data["types"]]),
+                "Habilidades": ", ".join([a["ability"]["name"] for a in pokemon_data["abilities"]]),
+            })
 
-        if results:
-            for pokemon in results:
-                name = pokemon['name']
-                url = pokemon['url']
-                print(name, url)
-        next = input("¿Continuar listando [Y/N]").lower()
-        if next == 'y':
-            get_pokemons(offset=offset+20)
+    df = pd.DataFrame(data)
+    return df
 
-if __name__ == '__main__':
-    url = 'https://pokeapi.co/api/v2/pokemon-form/'
-    get_pokemons()
+# Lista de IDs de Pokémon que deseas consultar
+pokemon_ids = [1, 4, 7, 25, 133, 150, 151]
+
+# Crear el DataFrame
+pokemon_df = create_pokemon_dataframe(pokemon_ids)
+
+# Mostrar el DataFrame
+print(pokemon_df)
+
