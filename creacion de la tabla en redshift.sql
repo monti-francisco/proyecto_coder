@@ -1,3 +1,2 @@
-create table montione457_coderhouse.pokemon (
-nombre varchar,
-url varchar)
+create table montione457_coderhouse.pokemons (
+Nombre varchar, Altura int, Peso int, Tipos varchar, Habilidades varchar)
