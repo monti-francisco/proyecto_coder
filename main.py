@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import datetime
 
 import requests
 import pandas as pd
@@ -31,11 +32,13 @@ def create_pokemon_dataframe(pokemon_ids):
         pokemon_data = get_pokemon_data(pokemon_id)
         if pokemon_data:
             data.append({
+                "Id": pokemon_id,
                 "Nombre": pokemon_data["name"],
                 "Altura": pokemon_data["height"],
                 "Peso": pokemon_data["weight"],
                 "Tipos": ", ".join([t["type"]["name"] for t in pokemon_data["types"]]),
                 "Habilidades": ", ".join([a["ability"]["name"] for a in pokemon_data["abilities"]]),
+                "fecha_insercion_datos": pd.Timestamp.now()
             })
 
     df = pd.DataFrame(data)
@@ -60,7 +63,7 @@ def run_query(connection, query):
 def main():
     # proceso de consumo
     # Lista de IDs de Pokémon que deseas consultar
-    pokemon_ids = range(1, 15)
+    pokemon_ids = range(1, 152)
 
     # Crear el DataFrame
     pokemon_df = create_pokemon_dataframe(pokemon_ids)

@@ -1,2 +1,2 @@
 create table montione457_coderhouse.pokemons (
-Nombre varchar PRIMARY KEY, Altura int, Peso int, Tipos varchar, Habilidades varchar)
+Id int PRIMARY KEY, Nombre varchar, Altura int, Peso int, Tipos varchar, Habilidades varchar, fecha_insercion_datos timestamp)
